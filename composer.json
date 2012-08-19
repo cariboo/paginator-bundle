@@ -17,7 +17,7 @@
     "require-dev": {
     },
     "autoload": {
-        "psr-0": { "Cariboo\\PaginatorBundle": "" }
+        "psr-0": { "Cariboo\\SimplePaginatorBundle": "" }
     },
-    "target-dir": "Cariboo/PaginatorBundle"
+    "target-dir": "Cariboo/SimplePaginatorBundle"
 }
