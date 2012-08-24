@@ -8,14 +8,18 @@ use DoctrineExtensions\Paginate\Paginate;
 
 class Paginator
 {
-//    const DEFAULT_ORDER = "p";          // Préfixe du n° de page dans l'URL
-    const DEFAULT_ITEMS_PER_PAGE = 5;   // Nombre d'articles par page
-    const DEFAULT_MAX_PAGER_ITEMS = 10; // Nombre de n° de pages visibles
+//    const DEFAULT_ORDER = "p";            // Préfixe du n° de page dans l'URL
+    const DEFAULT_ITEMS_PER_PAGE = 10;      // Nombre d'articles par page
+    const DEFAULT_MAX_PAGER_ITEMS = 10;     // Nombre de n° de pages visibles
 
     /**
      * @var int $currentPage
      */
     protected $currentPage;
+    /**
+     * @var Object[] currentPageResults
+     */
+    protected $currentPageResults;
     /**
      * @var int $defaultItemsPerPage
      */
@@ -29,9 +33,9 @@ class Paginator
      */
     protected $maxPagerItems;
     /**
-     * @var int $totalItems
+     * @var int $nbResults
      */
-    protected $totalItems;
+    protected $nbResults;
     /**
      * @var string $orderby
      */
@@ -41,15 +45,13 @@ class Paginator
     /**
      * @param Symfony\Component\HttpFoundation\Request $request
      */
-    public function __construct(Request $request, $itemsPerPage = self::DEFAULT_ITEMS_PER_PAGE)
+    public function __construct($itemsPerPage = self::DEFAULT_ITEMS_PER_PAGE, $maxPagerItems = self::DEFAULT_MAX_PAGER_ITEMS)
     {
+        $this->setItemsPerPage((int)$itemsPerPage);
+        $this->setMaxPagerItems((int)$maxPagerItems);
+        
+        $this->nbResults = 0;
         $this->currentPage = 1;
-//        $this->orderBy = self::DEFAULT_ORDER;
-
-        $this->setItemsPerPage($itemsPerPage);
-
-        $this->setMaxPagerItems(self::DEFAULT_MAX_PAGER_ITEMS);
-        $this->totalItems = 0;
     }
 
     /**
@@ -89,13 +91,15 @@ class Paginator
      * If you need to paginate various queries in the same controller, you need to specify an $id
      *
      * @param Doctrine\ORM\Query $query
-     * @return Doctrine\ORM\Query
      */
     public function paginate(Query $query)
     {
-        $this->totalItems = (int)Paginate::getTotalQueryResults($query);
+        $this->nbResults = (int)Paginate::getTotalQueryResults($query);
         $offset = ($this->getCurrentPage() - 1) * $this->getItemsPerPage();
-        return $query->setFirstResult($offset)->setMaxResults($this->getItemsPerPage());
+        $this->currentPageResults = $query
+            ->setFirstResult($offset)
+            ->setMaxResults($this->getItemsPerPage())
+            ->getResult();
     }
 
     /**
@@ -116,6 +120,16 @@ class Paginator
     public function setCurrentPage($page)
     {
         $this->currentPage = $page;
+    }
+
+    /**
+     * Get the current page results
+     * 
+     * @return Object[]
+     */
+    public function getCurrentPageResults()
+    {
+        return $this->currentPageResults;
     }
 
     /**
@@ -152,6 +166,16 @@ class Paginator
     }
 */
     /**
+     * Is the next page available ?
+     *
+     * @return boolean
+     */
+    public function hasNextPage()
+    {
+        return ($this->getCurrentPage() + 1 <= $this->getLastPage());
+    }
+
+    /**
      * Get the next page number
      *
      * @return int
@@ -174,6 +198,16 @@ class Paginator
         return $url;
     }
 */
+    /**
+     * Is the previous page available ?
+     *
+     * @return boolean
+     */
+    public function hasPreviousPage()
+    {
+        return ($this->getCurrentPage() - 1 >= $this->getFirstPage());
+    }
+
     /**
      * Get the previous page number
      *
@@ -224,13 +258,13 @@ class Paginator
     }
 
     /**
-     * Get the total items in the non-paginated version of the query
+     * Get the number or results in the non-paginated version of the query
      *
      * @return int
      */
-    public function getTotalItems()
+    public function getNbResults()
     {
-        return $this->totalItems;
+        return $this->nbResults;
     }
 
     /**
@@ -240,8 +274,8 @@ class Paginator
      */
     public function getLastPage()
     {
-        if ($this->getTotalItems() > 0) {
-            return (int)ceil($this->getTotalItems() / $this->getItemsPerPage());
+        if ($this->getNbResults() > 0) {
+            return (int)ceil($this->getNbResults() / $this->getItemsPerPage());
         } else {
             return 1;
         }
