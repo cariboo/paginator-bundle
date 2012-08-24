@@ -1,6 +1,6 @@
 <?php
 
-namespace Cariboo\SimplePaginatorBundle\Paginator;
+namespace Cariboo\PaginatorBundle\Paginator;
 
 use Symfony\Component\HttpFoundation\Request as Request;
 use Doctrine\ORM\Query as Query;
@@ -8,7 +8,7 @@ use DoctrineExtensions\Paginate\Paginate;
 
 class Paginator
 {
-    const DEFAULT_ORDER = "p";          // Préfixe du n° de page dans l'URL
+//    const DEFAULT_ORDER = "p";          // Préfixe du n° de page dans l'URL
     const DEFAULT_ITEMS_PER_PAGE = 5;   // Nombre d'articles par page
     const DEFAULT_MAX_PAGER_ITEMS = 10; // Nombre de n° de pages visibles
 
@@ -19,7 +19,7 @@ class Paginator
     /**
      * @var int $defaultItemsPerPage
      */
-    protected $defaultItemsPerPage;
+//    protected $defaultItemsPerPage;
     /**
      * @var int $itemsPerPage
      */
@@ -35,7 +35,7 @@ class Paginator
     /**
      * @var string $orderby
      */
-    protected $orderBy;
+//    protected $orderBy;
 
 
     /**
@@ -44,7 +44,7 @@ class Paginator
     public function __construct(Request $request, $itemsPerPage = self::DEFAULT_ITEMS_PER_PAGE)
     {
         $this->currentPage = 1;
-        $this->orderBy = self::DEFAULT_ORDER;
+//        $this->orderBy = self::DEFAULT_ORDER;
 
         $this->setItemsPerPage($itemsPerPage);
 
@@ -123,34 +123,34 @@ class Paginator
      * 
      * @return string
      */
-    public function getCurrent()
+/*    public function getCurrent()
     {
         $url = $this->getOrderBy() . $this->currentPage;
         if ($this->getItemsPerPage() != self::DEFAULT_ITEMS_PER_PAGE) $url .= '-' . $this->getItemsPerPage();
         
         return $url;
     }
-
+*/
     /**
      * Get the sort order
      * 
      * @return string
      */
-    public function getOrderBy()
+/*    public function getOrderBy()
     {
         return $this->orderBy;
     }
-
+*/
     /**
      * Set the sort order
      * 
      * @param string order
      */
-    public function setOrderBy($order)
+/*    public function setOrderBy($order)
     {
         $this->orderBy = $order;
     }
-
+*/
     /**
      * Get the next page number
      *
@@ -166,14 +166,14 @@ class Paginator
      *
      * @return string
      */
-    public function getNext()
+/*    public function getNext()
     {
         $url = $this->getOrderBy() . $this->getNextPage();
         if ($this->getItemsPerPage() != self::DEFAULT_ITEMS_PER_PAGE) $url .= '-' . $this->getItemsPerPage();
         
         return $url;
     }
-
+*/
     /**
      * Get the previous page number
      *
@@ -189,14 +189,14 @@ class Paginator
      *
      * @return string
      */
-    public function getPrevious()
+/*    public function getPrevious()
     {
         $url = $this->getOrderBy() . $this->getPreviousPage();
         if ($this->getItemsPerPage() != self::DEFAULT_ITEMS_PER_PAGE) $url .= '-' . $this->getItemsPerPage();
         
         return $url;
     }
-
+*/
     /**
      * @return int
      */
@@ -252,27 +252,27 @@ class Paginator
      *
      * @return string
      */
-    public function getLast()
+/*    public function getLast()
     {
         $url = $this->getOrderBy() . $this->getLastPage();
         if ($this->getItemsPerPage() != self::DEFAULT_ITEMS_PER_PAGE) $url .= '-' . $this->getItemsPerPage();
         
         return $url;
     }
-
+*/
     /**
      * Get page n URL part
      * 
      * @return string
      */
-    public function getPage($page)
+/*    public function getPage($page)
     {
         $url = $this->getOrderBy() . $page;
         if ($this->getItemsPerPage() != self::DEFAULT_ITEMS_PER_PAGE) $url .= '-' . $this->getItemsPerPage();
 
         return $url;
     }
-
+*/
     /**
      * Get the first page number
      * 
@@ -290,11 +290,11 @@ class Paginator
      * @param string order
      * @return string
      */
-    public function getFirst($order = '')
+/*    public function getFirst($order = '')
     {
         $url = ($order != '' ? $order : $this->getOrderBy()) . $this->getFirstPage();
         if ($this->getItemsPerPage() != self::DEFAULT_ITEMS_PER_PAGE) $url .= '-' . $this->getItemsPerPage();
         
         return $url;
-    }
+    }*/
 }
